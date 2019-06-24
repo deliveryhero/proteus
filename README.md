@@ -410,4 +410,4 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 * Rubocop
 
 ## License
-Copyright (c) 2019 [Delivery Hero SE](https://www.deliveryhero.com/). Proteus is free software, and may be redistributed under the terms specificed in the [license](LICENSE.md).
+Copyright (c) 2019 [Delivery Hero SE](https://www.deliveryhero.com/). Proteus is free software, and may be redistributed under the terms specificed in the [license](LICENSE).
