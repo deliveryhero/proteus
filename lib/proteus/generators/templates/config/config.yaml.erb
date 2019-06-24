@@ -1,0 +1,22 @@
+providers:
+  - name: 'aws'
+    environments:
+      - match: 'production' # must match the name of one of your proteus environments
+        profile: 'your_aws_profile'
+      - match: 'staging'
+        profile: 'your_aws_staging_profile'
+
+slack_webhooks:
+  - match: 'production' # must match the name of one of your proteus environments
+    url: 'YOUR_PRODUCTION_SLACK_HOOK_URL'
+  - match: 'staging'
+    url: 'YOUR_STAGING_SLACK_HOOK_URL'
+
+
+backend:
+  key_prefix: 'your-prefix-' # prefix for state files in the backend
+  # NOTE: Create this bucket in your AWS account and enable versioning
+  bucket:
+    name: 'your_bucket_name'
+    region: 'eu-west-1'
+    profile: 'your_aws_profile'
