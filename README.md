@@ -37,8 +37,7 @@ mkdir -p /usr/local/Cellar/terraform/0.11.14/bin \
 
 #### Install proteus
 ```
-gem source --add https://YOUR_USER:YOUR_PASSWORD@nexus.usehurrier.com/repository/infra-gems
-gem install proteus
+gem install dh-proteus
 ```
 
 #### Set up proteus root path
