@@ -31,7 +31,7 @@ mkdir -p /usr/local/Cellar/terraform/0.11.14/bin \
   && curl -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_darwin_amd64.zip" \
   && unzip -o /tmp/terraform.zip -d "/usr/local/Cellar/terraform/0.11.14/bin" \
   && rm -f /tmp/terraform.zip \
-  && brew switch terraform 0.11.14
+  && brew switch terraform 0.11.14 \
   && brew pin terraform
 ```
 
