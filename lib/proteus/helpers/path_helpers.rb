@@ -85,6 +85,11 @@ module Proteus
       def module_hooks_path(context, module_name)
         File.join(module_config_path(context, module_name), 'hooks')
       end
+
+      def module_data_path(context, module_name)
+        File.join(module_config_path(context, module_name), 'data')
+      end
+      
     end
   end
 end
