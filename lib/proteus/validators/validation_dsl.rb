@@ -98,7 +98,7 @@ module Proteus
         keys.each do |key|
           @current_paths = []
           transform_to_paths(current_data)
-          @current_paths = @current_paths.grep(/^:#{key}/)
+          @current_paths = @current_paths.grep(/^:#{key}:/)
 
           unless @current_paths.length == @current_paths.uniq.length
             raise ValidationError.new(message_suffix: "Values in hierarchy #{keys_to_hierarchy(*@key_stack)} => * => #{key} have to be unique.")
