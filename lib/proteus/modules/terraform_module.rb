@@ -1,7 +1,8 @@
 require 'proteus/helpers/path_helpers'
 require 'proteus/helpers/string_helpers'
-require 'hcl/checker'
+require 'proteus/modules/defaults_parser'
 require 'yaml'
+require 'fileutils'
 
 module Proteus
   module Modules
@@ -147,15 +148,12 @@ module Proteus
       end
 
       def parse_defaults
-        defaults = []
+        return [] unless File.file?(File.join(module_path(@context, @name), 'io.tf'))
 
-        return defaults unless File.file?(File.join(module_path(@context, @name), 'io.tf'))
-        HCL::Checker.parse(File.read(File.join(module_path(@context, @name), 'io.tf')))['variable'].each do |variable, values|
-          if values
-            defaults.push(variable) if values.has_key?('default')
-          end
-        end
-        return defaults
+        defaults_parser = DefaultsParser.new(File.read(File.join(module_path(@context, @name), 'io.tf')))
+        defaults_parser.parse_variables
+
+        return defaults_parser.variables
       end
 
       def global_resources

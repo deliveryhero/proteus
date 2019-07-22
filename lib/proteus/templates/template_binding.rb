@@ -26,8 +26,8 @@ module Proteus
 
       def render_defaults(context, demo: false)
         @defaults.inject("") do |memo, default|
-          if context.has_key?(default)
-            memo << "#{demo ? "# " : ""}#{default} = \"#{context[default]}\"\n"
+          if context.has_key?(default[0])
+            memo << "#{demo ? "# " : ""}#{default[0]} = \"#{context[default[0]]}\"\n"
           else
             memo
           end

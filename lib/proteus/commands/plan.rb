@@ -39,7 +39,6 @@ module Proteus
               #{"-destroy" if options[:destroy]} \
               -input=false \
               -refresh=true \
-              -module-depth=-1 \
               -var-file=#{var_file(context, environment)} \
               -out=#{plan_file(context, environment)} \
               #{aws_profile} #{limit(options[:limit])} \
