@@ -13,7 +13,7 @@ module Proteus
         lines.reject! { |l| l.start_with?("#") }
 
         lines.each_with_index do |line, index|
-          if line =~ /$variable/
+          if line =~ /^variable/
             # ignore mandatory variables
             if line =~ /{/ && line =~ /}/
               next
