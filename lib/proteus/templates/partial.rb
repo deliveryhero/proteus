@@ -98,7 +98,7 @@ module Proteus
         scoped = []
         manifest.each_line do |line|
           if line.include?('proteus:noscope')
-            say "NOT SCOPING: #{line}"
+            say "NOT SCOPING: #{line}", :green
             scoped << line.gsub(/( *)#( *)proteus:noscope/, '')
             next
           end
@@ -118,7 +118,7 @@ module Proteus
           elsif matches = line.match(/(?<resource>(?<data>data\.)?(?<resource_type>(?<provider>aws|helm|local)[a-z_0-9]+)\.(?<resource_name>[a-z\-_0-9]+)\.(?<resource_attribute>[a-z_]+))/)
             say "MATCHED RESOURCE REFERENCE: #{line}", :green
             scoped << line.gsub(matches[:resource], "#{matches[:data]}#{matches[:resource_type]}.#{scope}_#{matches[:resource_name]}.#{matches[:resource_attribute]}")
-            say "CHANGED TO: #{scoped.last}", green
+            say "CHANGED TO: #{scoped.last}", :green
           else
             scoped << line
           end
