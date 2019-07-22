@@ -97,21 +97,28 @@ module Proteus
       def scope_resources(manifest:, scope:)
         scoped = []
         manifest.each_line do |line|
-          if matches = line.match(/resource( +)"(?<resource_type>[a-z0-9_]+)"( +)"(?<resource_name>[a-zA-Z0-9_\-]+)"( +)(\{)/)
-            say "MATCHED RESOURCE: #{line}", :green
-            matches = matches.named_captures.with_indifferent_access
-            scoped << "resource \"#{matches[:resource_type]}\" \"#{scope}_#{matches[:resource_name]}\" {"
-            say "CHANGED TO:       #{scoped.last}", :green
-          elsif matches = line.match(/(?<pre>.*(\{|\())(?<data>data\.)?(?<resource_type>(?<provider>aws|kubernetes|helm|tls_private_key|null_resource)[a-z_0-9]*)\.(?<resource_name>[a-z0-9_]+)(?<attribute>(?<wildcard>.\*)?\.[a-z_]+)?(?<post>.*)?/)
-            matches = matches.named_captures.with_indifferent_access
+          if line.include?('proteus:noscope')
+            say "NOT SCOPING: #{line}"
+            scoped << line.gsub(/( *)#( *)proteus:noscope/, '')
+            next
+          end
 
-            if !matches[:data]
+          if matches = line.match(/(?<rd>resource|data)( +)"(?<resource_type>[a-z0-9_]+)"( +)"(?<resource_name>[a-zA-Z0-9_\-]+)"( *)(\{)/)
+            matches = matches.named_captures.with_indifferent_access
+            say "MATCHED RESOURCE: #{matches[:rd].upcase}", :green
+            scoped << "#{matches[:rd]} \"#{matches[:resource_type]}\" \"#{scope}_#{matches[:resource_name]}\" {"
+            say "CHANGED TO:       #{scoped.last}", :green
+          elsif matches = line.match(/^(?<pre>\s+)?(?<left>[a-z_]+)(?<eq>[= ]+)(?<lbracket>\[)?(?<lparen>"\${)?(?<funcbeg>([a-z]+\()*)?(?<data>data\.)?(?<resource_type>[a-z_0-9]+)\.(?<resource_name>[a-z_0-9-]+)\.(?<wildcard>\*.)?(?<resource_attribute>[a-z_]+)(?<rparen>}")?(?<post>.*)?/)
+
+            matches = matches.named_captures.with_indifferent_access
+            #if !matches[:data]
               say "MATCHED REFERENCE: #{line}", :green
-              scoped << "#{matches[:pre]}#{matches[:resource_type]}.#{scope}_#{matches[:resource_name]}#{matches[:attribute]}#{matches[:post]}"
-              say "CHANGED TO:        #{scoped.last}", :green
-            else
-              scoped << line
-            end
+              scoped << "#{matches[:pre]}#{matches[:left]}#{matches[:eq]}#{matches[:lbracket]}#{matches[:lparen]}#{matches[:funcbeg]}#{matches[:data]}#{matches[:resource_type]}.#{scope}_#{matches[:resource_name]}.#{matches[:wildcard]}#{matches[:resource_attribute]}#{matches[:rparen]}#{matches[:post]}"
+              say "CHANGED TO: #{scoped.last}", :green
+          elsif matches = line.match(/(?<resource>(?<data>data\.)?(?<resource_type>(?<provider>aws|helm|local)[a-z_0-9]+)\.(?<resource_name>[a-z\-_0-9]+)\.(?<resource_attribute>[a-z_]+))/)
+            say "MATCHED RESOURCE REFERENCE: #{line}", :green
+            scoped << line.gsub(matches[:resource], "#{matches[:data]}#{matches[:resource_type]}.#{scope}_#{matches[:resource_name]}.#{matches[:resource_attribute]}")
+            say "CHANGED TO: #{scoped.last}", green
           else
             scoped << line
           end

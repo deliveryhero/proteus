@@ -43,7 +43,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'activesupport', '~> 5.1.1'
   spec.add_runtime_dependency 'thor', '~> 0.20.0'
   spec.add_runtime_dependency 'erubis', '~> 2.7.0'
-  spec.add_runtime_dependency 'hcl-checker', '~> 1.0.5'
   spec.add_runtime_dependency 'aws-sdk-rds', '~> 1.11.0'
   spec.add_runtime_dependency 'aws-sdk-route53', '~> 1.7.0'
   spec.add_runtime_dependency 'aws-sdk-elasticsearchservice', '~> 1.4.0'
