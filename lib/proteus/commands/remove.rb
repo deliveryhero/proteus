@@ -35,8 +35,6 @@ module Proteus
               state_remove_command = <<~STATE_REMOVE_COMMAND
                 cd #{context_path(context)} && \
                 terraform state rm \
-                -var-file=#{var_file(context, environment)} \
-                #{aws_profile} \
                 %{resource_addresses}
               STATE_REMOVE_COMMAND
 
