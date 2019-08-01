@@ -1,5 +1,5 @@
 module Proteus
-  VERSION = "0.1.7"
+  VERSION = "0.1.8"
 end
 
 if $0 == __FILE__
