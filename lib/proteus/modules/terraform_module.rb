@@ -78,11 +78,50 @@ module Proteus
 
         if File.file?(config_file)
           @data = YAML.load_file(config_file, {}).with_indifferent_access
+          load_referenced_data(@data)
+        end
+      end
+
+      def i(i)
+        ' ' * 2 * i
+      end
+
+      def read(data)
+        if data.end_with?('.yaml')
+          # single file load request
+          file = File.join(module_data_path(@context, @name), data)
+          YAML.load_file(file)
+        else
+          files = Dir.glob(
+            File.join(module_data_path(@context, @name), data, '*.yaml')
+          )
+
+          files.collect do |f|
+            YAML.load_file(f)
+          end.flatten
+        end
+      end
+
+      def load_referenced_data(data, indent: 0, debug: false)
+        if data.is_a?(Array)
+          data.each_with_index do |_, index|
+            load_referenced_data(data[index], indent: indent + 1)
+          end
+        elsif data.is_a?(Hash)
+          data.each do |key, value|
+            if value =~ /__load: (.*)/
+              data[key] = read(Regexp.last_match(1))
+            end
+            load_referenced_data(data[key], indent: indent + 1)
+          end
+        elsif debug
+          # scalar value
         end
       end
 
       def data?
         return false unless @data
+
         @data.any?
       end
 
