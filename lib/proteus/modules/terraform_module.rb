@@ -79,9 +79,6 @@ module Proteus
         if File.file?(config_file)
           @data = YAML.load_file(config_file, {}).with_indifferent_access
           load_referenced_data(@data)
-
-           puts "LOADED DATA"
-          pp @data
         end
       end
 
@@ -107,21 +104,18 @@ module Proteus
 
       def load_referenced_data(data, indent: 0, debug: false)
         if data.is_a?(Array)
-          puts "#{i(indent)}Array" if debug
           data.each_with_index do |_, index|
             load_referenced_data(data[index], indent: indent + 1)
           end
         elsif data.is_a?(Hash)
-          puts "#{i(indent)}Hash" if debug
           data.each do |key, value|
             if value =~ /__load: (.*)/
-              puts "#{i(indent)}LOAD #{Regexp.last_match(1)}" if debug
               data[key] = read(Regexp.last_match(1))
             end
             load_referenced_data(data[key], indent: indent + 1)
           end
         elsif debug
-          puts "#{i(indent)}Scalar: #{data}"
+          # scalar value
         end
       end
 
