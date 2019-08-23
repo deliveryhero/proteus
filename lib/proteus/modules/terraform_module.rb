@@ -85,11 +85,11 @@ module Proteus
         end
       end
 
-       def i(i)
+      def i(i)
         ' ' * 2 * i
       end
 
-       def read(data)
+      def read(data)
         if data.end_with?('.yaml')
           # single file load request
           file = File.join(module_data_path(@context, @name), data)
@@ -99,13 +99,13 @@ module Proteus
             File.join(module_data_path(@context, @name), data, '*.yaml')
           )
 
-           files.collect do |f|
+          files.collect do |f|
             YAML.load_file(f)
           end.flatten
         end
       end
 
-       def load_referenced_data(data, indent: 0, debug: false)
+      def load_referenced_data(data, indent: 0, debug: false)
         if data.is_a?(Array)
           puts "#{i(indent)}Array" if debug
           data.each_with_index do |_, index|
@@ -127,6 +127,7 @@ module Proteus
 
       def data?
         return false unless @data
+
         @data.any?
       end
 
