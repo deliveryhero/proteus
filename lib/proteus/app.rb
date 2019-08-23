@@ -2,6 +2,7 @@ require 'proteus/common'
 require 'proteus/generate'
 require 'proteus/init'
 require 'proteus/global_commands/validate'
+require 'proteus/global_commands/version'
 require 'proteus/context_management/context'
 require 'proteus/context_management/helpers'
 require 'proteus/templates/template_binding'
@@ -82,5 +83,6 @@ module Proteus
     subcommand('init', Proteus::Init)
 
     include Proteus::GlobalCommands::Validate
+    include Proteus::GlobalCommands::Version
   end
 end
