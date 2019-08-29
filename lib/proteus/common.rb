@@ -59,9 +59,7 @@ module Proteus
       config[:providers].select {|p| p[:name] == 'aws' }.first[:environments].each do |provider|
         return "-var 'aws_profile=#{provider[:profile]}'" if environment =~ (/#{provider[:match]}/)
       end
-
-      say "No provider found matching environment #{environment}.", :red
-      exit 1
+      return ""
     end
 
     def dryrun
