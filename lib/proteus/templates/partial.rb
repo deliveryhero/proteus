@@ -25,7 +25,7 @@ module Proteus
           @data['partials'][@name].delete('render')
           set(@name, @data['partials'][@name])
         else
-          set(@name, ActiveSupport::HashWithIndifferentAccess.new)
+          set(@name.split('/').last, ActiveSupport::HashWithIndifferentAccess.new)
         end
 
       end
