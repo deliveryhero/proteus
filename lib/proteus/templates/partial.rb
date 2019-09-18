@@ -1,5 +1,3 @@
-require 'hcl/checker'
-
 module Proteus
   module Templates
     class Partial < TemplateBinding
@@ -24,10 +22,10 @@ module Proteus
 
         if data.dig('partials', @name)
           @partial_data_present = true
-
           @data['partials'][@name].delete('render')
-
           set(@name, @data['partials'][@name])
+        else
+          set(@name, ActiveSupport::HashWithIndifferentAccess.new)
         end
 
       end
@@ -44,7 +42,6 @@ module Proteus
           else
             partial_file = sub_directory_partial_path
           end
-
 
           if File.file?(partial_file)
             partial_template = File.read(partial_file)
