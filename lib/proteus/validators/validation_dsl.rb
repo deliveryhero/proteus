@@ -82,6 +82,15 @@ module Proteus
                 raise ValidationError.new(message_suffix: "Data in hierarchy #{keys_to_hierarchy(*@key_stack)} invalid. Value of #{current_data[key.to_s]} must match #{options[:matches].inspect}.")
               end
             end
+
+            if options.key?(:length)
+              min = options[:length][:min] || 0
+              max = options[:length][:max] || 18446744073709551616 # 2**64
+
+              unless current_data[key.to_s].size >= min && current_data[key.to_s].size <= max
+                raise ValidationError.new(message_suffix: "Data in hierarchy #{keys_to_hierarchy(*@key_stack)} invalid. Length of #{current_data[key.to_s]} must be in range [#{min}, #{max}].")
+              end
+            end
           end
         else
           unless options.key?(:optional)
