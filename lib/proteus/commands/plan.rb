@@ -12,6 +12,7 @@ module Proteus
           LONGDESC
           option :limit, type: :array, aliases: "-l", default: []
           option :destroy, type: :boolean, default: false
+          option :parallelism, type: :numeric, aliases: "-p", default: 10
           def plan
             module_manager = Proteus::Modules::Manager.new(context: context, environment: environment)
             module_manager.clean
@@ -37,6 +38,7 @@ module Proteus
               cd #{context_path(context)} && \
               terraform plan \
               #{"-destroy" if options[:destroy]} \
+              -parallelism=#{options[:parallelism]} \
               -input=false \
               -refresh=true \
               -var-file=#{var_file(context, environment)} \
