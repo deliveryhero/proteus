@@ -19,8 +19,6 @@ module Proteus
               taint_command = <<~TAINT_COMMAND
                 cd #{context_path(context)} && \
                 terraform taint \
-                -var-file=#{var_file(context, environment)} \
-                #{aws_profile} \
                 #{options[:module] ? "-module=#{options[:module]}" : ""} \
                 #{options[:resource]}
               TAINT_COMMAND
