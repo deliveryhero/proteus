@@ -20,8 +20,14 @@ module Proteus
           ensure_data_type Array
 
           each do
+            ensure_keys :name
+
             within :environments do
               ensure_uniqueness_across :match
+
+              each do
+                ensure_keys :profile
+              end
             end
           end
         end

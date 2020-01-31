@@ -7,6 +7,10 @@ require 'proteus/context_management/context'
 require 'proteus/context_management/helpers'
 require 'proteus/templates/template_binding'
 require 'proteus/templates/partial'
+require 'proteus/commands/state/list'
+require 'proteus/commands/state/move'
+require 'proteus/commands/state/remove'
+require 'proteus/commands/state/show'
 
 module Proteus
 
@@ -56,6 +60,33 @@ module Proteus
           def self.environment
             @environment
           end
+
+          state_class = Class.new(Proteus::Common)
+          state_class_name = "#{class_name}State"
+          mod_name.const_set(state_class_name, state_class)
+
+          state_class.class_eval do
+            include Config
+            include Helpers
+            include Proteus::Helpers::PathHelpers
+            include Proteus::Commands::StateCommands::List
+            include Proteus::Commands::StateCommands::Move
+            include Proteus::Commands::StateCommands::Remove
+            include Proteus::Commands::StateCommands::Show
+
+            private
+
+            define_method :context do
+              context.name
+            end
+
+            define_method :environment do
+              environment
+            end
+          end
+
+          desc 'state', 'This command has subcommands for advanced state management.'
+          subcommand('state', state_class)
         end
 
         if context.name == 'default'

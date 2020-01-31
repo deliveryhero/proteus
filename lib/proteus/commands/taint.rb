@@ -11,7 +11,6 @@ module Proteus
             --resource The resource to taint
           LONGDESC
           option :resource, type: :string, aliases: "-r", required: true
-          option :module, type: :string, aliases: "-m", required: false, default: nil
           def taint
             init(verbose: parent_options[:verbose])
             confirm question: "Do you really want to run 'terraform taint' on environment '#{environment}' in context '#{context}'?", color: :on_red, exit_code: 0 do
@@ -19,7 +18,6 @@ module Proteus
               taint_command = <<~TAINT_COMMAND
                 cd #{context_path(context)} && \
                 terraform taint \
-                #{options[:module] ? "-module=#{options[:module]}" : ""} \
                 #{options[:resource]}
               TAINT_COMMAND
               syscall taint_command.squeeze(' ')

@@ -3,10 +3,8 @@ require 'proteus/commands/clean'
 require 'proteus/commands/destroy'
 require 'proteus/commands/graph'
 require 'proteus/commands/import'
-require 'proteus/commands/move'
 require 'proteus/commands/output'
 require 'proteus/commands/plan'
-require 'proteus/commands/remove'
 require 'proteus/commands/render'
 require 'proteus/commands/taint'
 
@@ -16,7 +14,9 @@ module Proteus
     include Proteus::Helpers::PathHelpers
 
     Proteus::Commands.constants.each do |command|
-      include const_get("Proteus::Commands::#{command}")
+      unless command == :State
+        include const_get("Proteus::Commands::#{command}")
+      end
     end
 
     private
@@ -56,10 +56,13 @@ module Proteus
     end
 
     def aws_profile
-      config[:providers].select {|p| p[:name] == 'aws' }.first[:environments].each do |provider|
-        return "-var 'aws_profile=#{provider[:profile]}'" if environment =~ (/#{provider[:match]}/)
+      config[:providers].select {|p| p[:name] == 'aws' }.first[:environments].each do |env|
+        env[:match].each do |m|
+          return "-var 'aws_profile=#{env[:profile]}'" if environment == m
+        end
       end
-      return ""
+
+      raise "No AWS profile found in config."
     end
 
     def dryrun
