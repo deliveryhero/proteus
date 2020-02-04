@@ -62,7 +62,7 @@ module Proteus
         end
       end
 
-      raise "No AWS profile found in config."
+      ""
     end
 
     def dryrun
