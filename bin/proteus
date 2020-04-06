@@ -2,4 +2,5 @@
 
 require 'proteus'
 
+$stdout.sync = true
 Proteus::App.start(ARGV)

@@ -26,7 +26,7 @@ module Proteus
               ensure_uniqueness_across :match
 
               each do
-                ensure_keys :profile
+                ensure_keys :profile, :backend
               end
             end
           end
@@ -41,10 +41,12 @@ module Proteus
         end
 
         within :backend do
-          ensure_presence :key_prefix
+          each_key do
+            ensure_presence :key_prefix
 
-          within :bucket do
-            ensure_keys :name, :region, :profile
+            within :bucket do
+              ensure_keys :name, :region, :profile
+            end
           end
         end
       end
