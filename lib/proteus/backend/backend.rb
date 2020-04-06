@@ -10,7 +10,17 @@ module Proteus
         @config = config
         @context = context
         @environment = environment
-      end
+
+        @config[:providers].select {|p| p[:name] == 'aws' }.first[:environments].each do |env|
+          env[:match].each do |m|
+            if @environment == m
+              @provider_environment = env
+            end
+          end
+        end
+
+        @backend_key = @provider_environment[:backend]
+    end
 
       def render
         File.open(File.join(context_path(@context), 'backend.tf'), 'w') do |file|
@@ -28,10 +38,10 @@ module Proteus
         <<~TEMPLATE
           terraform {
             backend "s3" {
-              bucket  = "<%= @config[:backend][:bucket][:name] %>"
-              key     = "<%= @config[:backend][:key_prefix] %>#{@context}-#{@environment}.tfstate"
-              region  = "<%= @config[:backend][:bucket][:region] %>"
-              profile = "<%= @config[:backend][:bucket][:profile]%>"
+              bucket  = "<%= @config[:backend][@backend_key][:bucket][:name] %>"
+              key     = "<%= @config[:backend][@backend_key][:key_prefix] %>#{@context}-#{@environment}.tfstate"
+              region  = "<%= @config[:backend][@backend_key][:bucket][:region] %>"
+              profile = "<%= @config[:backend][@backend_key][:bucket][:profile]%>"
             }
           }
         TEMPLATE
