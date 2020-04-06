@@ -30,14 +30,17 @@ module Proteus
     end
 
     def render_backend
-      Proteus::Backend::Backend.new(config: config, context: context, environment: environment).render
+      backend = Proteus::Backend::Backend.new(config: config, context: context, environment: environment)
+      backend.render
+
+      backend
     end
 
     def init(verbose: false)
       say "initializing", :green
       say "environment: #{environment}", :green
 
-      render_backend
+      backend = render_backend
 
       `rm -rf #{context_path(context)}/.terraform/*.tf*`
       `rm -rf #{context_path(context)}/.terraform/modules`
@@ -46,7 +49,7 @@ module Proteus
       terraform_command = <<~TERRAFORM_COMMAND
         cd #{context_path(context)} && \
         terraform init \
-        -backend-config='key=#{config[:backend][:key_prefix]}#{context}-#{environment}.tfstate' \
+        -backend-config='key=#{config[:backend][backend.backend_key][:key_prefix]}#{context}-#{environment}.tfstate' \
         #{aws_profile} \
         #{context_path(context)}
       TERRAFORM_COMMAND

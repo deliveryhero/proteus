@@ -6,6 +6,8 @@ module Proteus
       include Proteus::Helpers::PathHelpers
       include Thor::Shell
 
+      attr_reader :backend_key
+
       def initialize(config:, context:, environment:)
         @config = config
         @context = context
