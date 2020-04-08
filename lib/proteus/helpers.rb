@@ -33,7 +33,7 @@ module Proteus
     end
 
     def current_user
-      Etc.getpwnam(Etc.getlogin).gecos
+       ENV['CURRENT_USER_NAME'] ? ENV['CURRENT_USER_NAME'] : Etc.getpwnam(Etc.getlogin).gecos
     end
 
     def slack_webhook
