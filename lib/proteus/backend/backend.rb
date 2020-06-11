@@ -13,10 +13,12 @@ module Proteus
         @context = context
         @environment = environment
 
-        @config[:providers].select {|p| p[:name] == 'aws' }.first[:environments].each do |env|
-          env[:match].each do |m|
-            if @environment == m
-              @provider_environment = env
+        @config[:providers].each do |provider|
+          provider[:environments].each do |env|
+            env[:match].each do |m|
+              if @environment == m
+                @provider_environment = env
+              end
             end
           end
         end
