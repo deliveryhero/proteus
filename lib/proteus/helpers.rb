@@ -33,7 +33,15 @@ module Proteus
     end
 
     def current_user
-       ENV['CURRENT_USER_NAME'] ? ENV['CURRENT_USER_NAME'] : Etc.getpwnam(Etc.getlogin).gecos
+       user = ENV['CURRENT_USER_NAME'] ? ENV['CURRENT_USER_NAME'] : Etc.getpwnam(Etc.getlogin).gecos
+       if user.empty?
+         puts "Please set your git username properly:"
+         puts "git config --global user.name \"FIRST_NAME LAST_NAME\""
+         puts "git config --global user.email \"YOUR_NAME@example.com\""
+         exit 1
+       else
+         user
+       end
     end
 
     def slack_webhook
