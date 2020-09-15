@@ -14,8 +14,29 @@ module Proteus
           long_desc <<-LONGDESC
             Renders templates for all environments, reporting validation errors.
           LONGDESC
+          option :selective, type: :boolean, default: false
           def validate
+            # case 1: changes in root => run full validation
+            # case 2: no changes in root => run contexts only
+            status = `git --no-pager diff origin/master --stat --name-only`.split("\n")
+
+            run_full_validation = if status.map {|l| !l.include?('/') }.any? || !options[:selective]
+                                    say "Found changes in the root of the repository or --selective is not set. Running full validation.", :green
+                                    true
+                                  else
+                                    say "Running selective validation.", :green
+                                    false
+                                  end
+            selected_contexts = status.map { |s| s.scan(/contexts\/([a-zA-Z0-9_]+)\/((.+)\/)?/).flatten.first }.reject { |s| s.nil? }.uniq!
+
             self.class.contexts.each do |context|
+              unless run_full_validation
+                if !selected_contexts.include?(context.name)
+                  say "Skipping context #{context.name}.", :green
+                  next
+                end
+              end
+
               context.environments.each do |environment|
                 module_manager = Proteus::Modules::Manager.new(context: context.name, environment: environment)
                 module_manager.render_modules
