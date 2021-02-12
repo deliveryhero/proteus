@@ -7,10 +7,7 @@ module Proteus
           desc 'apply', 'Applies the current terraform code'
           long_desc <<-LONGDESC
             Applies the current terraform code
-
-            With --limit option, Terraform will only apply changes for the the specified resources
           LONGDESC
-          option :limit, type: :array, aliases: "-l", required: false, default: nil
           def apply
             init(verbose: parent_options[:verbose])
 
@@ -30,7 +27,6 @@ module Proteus
                 terraform apply \
                 -input=true \
                 -refresh=true \
-                #{limit(options[:limit])} \
                 #{plan_file(context, environment)}
               APPLY_COMMAND
 
