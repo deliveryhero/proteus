@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
 
-  spec.add_runtime_dependency 'activesupport', '~> 5.1.1'
+  spec.add_runtime_dependency 'activesupport', '>= 5.1.1', '< 6.2.0'
   spec.add_runtime_dependency 'thor', '~> 0.20.0'
   spec.add_runtime_dependency 'erubis', '~> 2.7.0'
   spec.add_runtime_dependency 'terminal-table', '~> 3.0.0'
