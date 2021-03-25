@@ -16,17 +16,19 @@ module Proteus
 
     class ConfigValidator < Proteus::Validators::BaseValidator
       def validate
-        within :providers do
+        within :contexts do
           ensure_data_type Array
+          ensure_uniqueness_across :name
 
           each do
             ensure_keys :name
+            ensure_uniqueness_across :name
 
             within :environments do
               ensure_uniqueness_across :match
 
               each do
-                ensure_keys :profile, :backend
+                ensure_keys :backend
               end
             end
           end
@@ -42,10 +44,10 @@ module Proteus
 
         within :backend do
           each_key do
-            ensure_presence :key_prefix
+            ensure_keys :key_prefix, :profile
 
             within :bucket do
-              ensure_keys :name, :region, :profile
+              ensure_keys :name, :region
             end
           end
         end

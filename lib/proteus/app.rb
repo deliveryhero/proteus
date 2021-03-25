@@ -1,6 +1,7 @@
 require 'proteus/common'
 require 'proteus/generate'
 require 'proteus/init'
+require 'proteus/backend_info'
 require 'proteus/global_commands/validate'
 require 'proteus/global_commands/version'
 require 'proteus/context_management/context'
@@ -112,6 +113,9 @@ module Proteus
 
     desc 'init', 'Initializes a new proteus root directory in the current working directory'
     subcommand('init', Proteus::Init)
+
+    desc 'backend_info', 'Shows information about backends'
+    subcommand('backend_info', Proteus::BackendInfo)
 
     include Proteus::GlobalCommands::Validate
     include Proteus::GlobalCommands::Version

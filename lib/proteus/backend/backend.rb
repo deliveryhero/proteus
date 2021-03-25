@@ -13,17 +13,7 @@ module Proteus
         @context = context
         @environment = environment
 
-        @config[:providers].each do |provider|
-          provider[:environments].each do |env|
-            env[:match].each do |m|
-              if @environment == m
-                @provider_environment = env
-              end
-            end
-          end
-        end
-
-        @backend_key = @provider_environment[:backend]
+        find_backend_key
     end
 
       def render
@@ -36,7 +26,50 @@ module Proteus
         exit 1
       end
 
+      def show_backends
+        require 'terminal-table'
+        table = Terminal::Table.new do |t|
+            t << ['Context', 'Environment', 'Profile', 'Bucket']
+
+          @config[:contexts].each do |ctx|
+            ctx[:environments].each do |env|
+              env[:match].each do |m|
+                t << [
+                  ctx[:name],
+                  m,
+                  @config[:backend][env[:backend]][:profile],
+                  @config[:backend][env[:backend]][:bucket][:name]
+                ]
+              end
+            end
+          end
+        end
+
+        say table, :green
+
+      end
+
+      def aws_profile
+        @config[:backend][@backend_key][:profile]
+      end
+
       protected
+
+      def find_backend_key
+        @config[:contexts].each do |ctx|
+          if ctx[:name] == @context
+            ctx[:environments].each do |env|
+              env[:match].each do |m|
+                if @environment == m
+                  @backend_key = env[:backend]
+                  say "Using backend #{@backend_key}", :green
+                  return
+                end
+              end
+            end
+          end
+        end
+      end
 
       def template
         <<~TEMPLATE
@@ -45,7 +78,7 @@ module Proteus
               bucket  = "<%= @config[:backend][@backend_key][:bucket][:name] %>"
               key     = "<%= @config[:backend][@backend_key][:key_prefix] %>#{@context}-#{@environment}.tfstate"
               region  = "<%= @config[:backend][@backend_key][:bucket][:region] %>"
-              profile = "<%= @config[:backend][@backend_key][:bucket][:profile]%>"
+              profile = "<%= @config[:backend][@backend_key][:profile]%>"
             }
           }
         TEMPLATE
