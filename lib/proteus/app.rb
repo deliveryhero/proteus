@@ -23,7 +23,7 @@ module Proteus
     extend Proteus::ContextManagement::Helpers
 
     class_option :dryrun, type: :boolean, default: false, aliases: '-d'
-    class_option :verbose, type: :boolean, default: false, aliases: '-v'
+    class_option :verbose, type: :boolean, default: true, aliases: '-v'
 
     contexts.each do |context|
 
