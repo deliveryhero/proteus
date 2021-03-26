@@ -54,8 +54,7 @@ module Proteus
         #{context_path(context)}
       TERRAFORM_COMMAND
 
-      output = syscall terraform_command.squeeze(' '), suppress: true, capture: true
-      say(output, :green) if verbose
+      syscall terraform_command.squeeze(' ')
     end
 
     def aws_profile
