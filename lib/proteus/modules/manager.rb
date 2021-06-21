@@ -35,7 +35,9 @@ module Proteus
         if tfvars_content.empty?
           terraform_variables = []
         else
-          terraform_variables = JSON.parse(parse_tfvars(tfvars: tfvars_content))
+          terraform_variables = JSON.parse(parse_tfvars(tfvars: tfvars_content)).merge({
+            'proteus_environment' => @environment
+          })
         end
 
         @modules = []

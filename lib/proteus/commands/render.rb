@@ -10,6 +10,7 @@ module Proteus
           long_desc <<-LONGDESC
             Renders the module templates without running Terraform
           LONGDESC
+          option :init, type: :boolean, default: false
           def render
             render_backend
             module_manager = Proteus::Modules::Manager.new(context: context, environment: environment)
@@ -25,6 +26,8 @@ module Proteus
               capture: true,
               suppress: true
             )
+
+            init(verbose: parent_options[:verbose]) if options[:init]
 
             say "Formatted files:", :green
             say fmt_output, :green
