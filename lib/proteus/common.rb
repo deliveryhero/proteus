@@ -7,6 +7,7 @@ require 'proteus/commands/output'
 require 'proteus/commands/plan'
 require 'proteus/commands/render'
 require 'proteus/commands/taint'
+require 'proteus/commands/untaint'
 
 module Proteus
   class Common < Thor
