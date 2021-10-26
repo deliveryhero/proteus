@@ -79,6 +79,10 @@ module Proteus
               key     = "<%= @config[:backend][@backend_key][:key_prefix] %>#{@context}-#{@environment}.tfstate"
               region  = "<%= @config[:backend][@backend_key][:bucket][:region] %>"
               profile = "<%= @config[:backend][@backend_key][:profile]%>"
+              <%- if (@config[:backend][@backend_key].keys & ["encrypt", "kms_key_id"]).size == 2 -%>
+              encrypt = true
+              kms_key_id = "<%= @config[:backend][@backend_key][:kms_key_id] %>"
+              <%- end -%>
             }
           }
         TEMPLATE
