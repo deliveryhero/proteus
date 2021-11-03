@@ -46,6 +46,7 @@ module Proteus
       `rm -rf #{context_path(context)}/.terraform/*.tf*`
       `rm -rf #{context_path(context)}/.terraform/modules`
       `rm -rf #{context_path(context)}/terraform.tfstate*`
+      `rm -rf #{context_path(context)}/.terraform.lock.hcl`
 
       terraform_command = <<~TERRAFORM_COMMAND
         cd #{context_path(context)} && \
