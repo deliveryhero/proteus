@@ -20,7 +20,7 @@ module Proteus
               terraform destroy \
               -var-file=#{var_file(context, environment)} \
               #{aws_profile} \
-              ##{limit(options[:limit])}
+              #{limit(options[:limit])}
             DESTROY_COMMAND
 
             plan_destroy_command = <<~PLAN_DESTROY_COMMAND
@@ -30,7 +30,7 @@ module Proteus
               -out=#{plan_file(context, environment)} \
               -var-file=#{var_file(context, environment)} \
               #{aws_profile} \
-              ##{limit(options[:limit])}
+              #{limit(options[:limit])}
             PLAN_DESTROY_COMMAND
 
 
